@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+
+import GlobalStyle from './styles/global'
 
 function App() {
   return (
-    <div className="App">
+    <Fragment>
+      <GlobalStyle />
       <h1>Spotify React</h1>
-    </div>
+    </Fragment>
   );
 }
 
