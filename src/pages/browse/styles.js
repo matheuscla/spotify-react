@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 export const Container = styled.div`
   flex: 1;
@@ -16,12 +17,13 @@ export const List = styled.div`
   display: flex;
 `
 
-export const Playlist = styled.a`
+export const Playlist = styled(Link)`
   display: flex;
   flex-direction: column;
   margin-left: 20px;
   width: 250px;
   text-decoration: none;
+  color: #fff;
 
   img {
     height: 250px;
