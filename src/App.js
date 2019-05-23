@@ -2,11 +2,13 @@ import React, { Fragment } from 'react'
 
 import GlobalStyle from './styles/global'
 
+import Sidebar from './components/Sidebar'
+
 function App() {
   return (
     <Fragment>
       <GlobalStyle />
-      <h1>Spotify React</h1>
+      <Sidebar />
     </Fragment>
   );
 }
