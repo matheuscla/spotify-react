@@ -1,87 +1,121 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
+import Loading from '../../components/Loading'
+
+import { Creators as PlaylistDetailsActions } from '../../store/ducks/playlistDetails'
 
 import { Container, Header, SongList } from './styles'
 
 import ClockIcon from '../../assets/images/clock.svg'
 import PlusIcon from '../../assets/images/plus.svg'
 
-const Playlist = () => (
-  <Container>
-    <Header>
-      <img src='https://blog.spoongraphics.co.uk/wp-content/uploads/2017/01/thumbnail-2.jpg' />
-      <div>
-        <span>PLAYLIST</span>
-        <h1>Rock forever</h1>
-        <p>13 musics</p>
+class Playlist extends Component {
+  
+  static propTypes = {
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        id: PropTypes.number
+      })
+    }).isRequired,
+    getPlaylistDetailsRequest: PropTypes.func.isRequired,
+    playlistDetails: PropTypes.shape({
+      data: PropTypes.shape({
+        thumbnail: PropTypes.string,
+        title: PropTypes.string,
+        description: PropTypes.string,
+        songs: PropTypes.arrayOf(PropTypes.shape({
+          id: PropTypes.number,
+          title: PropTypes.string,
+          author: PropTypes.string,
+          album: PropTypes.string,
+        }))
+      }),
+      loading: PropTypes.bool
+    }).isRequired
+  }
 
-        <button>PLAY</button>
-      </div>
-    </Header>
+  componentDidMount() {
+    this.loadPlaylistDetails()
+  }
 
-    <SongList cellPadding={0} cellSpacing={0}>
-      <thead>
-        <th />
-        <th>Title</th>
-        <th>Artist</th>
-        <th>Album</th>
-        <th>
-          <img src={ClockIcon} alt='duration' />
-        </th>
-      </thead>
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      this.loadPlaylistDetails()
+    }
+  }
 
-      <tbody>
-        <tr>
-          <td><img src={PlusIcon} alt='add' /></td>
-          <td>Papercut</td>
-          <td>Linkin Park</td>
-          <td>Hybrid Theory</td>
-          <td>3:26</td>
-        </tr>
-        <tr>
-          <td><img src={PlusIcon} alt='add' /></td>
-          <td>Papercut</td>
-          <td>Linkin Park</td>
-          <td>Hybrid Theory</td>
-          <td>3:26</td>
-        </tr>
-        <tr>
-          <td><img src={PlusIcon} alt='add' /></td>
-          <td>Papercut</td>
-          <td>Linkin Park</td>
-          <td>Hybrid Theory</td>
-          <td>3:26</td>
-        </tr>
-        <tr>
-          <td><img src={PlusIcon} alt='add' /></td>
-          <td>Papercut</td>
-          <td>Linkin Park</td>
-          <td>Hybrid Theory</td>
-          <td>3:26</td>
-        </tr>
-        <tr>
-          <td><img src={PlusIcon} alt='add' /></td>
-          <td>Papercut</td>
-          <td>Linkin Park</td>
-          <td>Hybrid Theory</td>
-          <td>3:26</td>
-        </tr>
-        <tr>
-          <td><img src={PlusIcon} alt='add' /></td>
-          <td>Papercut</td>
-          <td>Linkin Park</td>
-          <td>Hybrid Theory</td>
-          <td>3:26</td>
-        </tr>
-        <tr>
-          <td><img src={PlusIcon} alt='add' /></td>
-          <td>Papercut</td>
-          <td>Linkin Park</td>
-          <td>Hybrid Theory</td>
-          <td>3:26</td>
-        </tr>
-      </tbody>
-    </SongList>
-  </Container>
-)
+  loadPlaylistDetails = () => {
+    const { id } = this.props.match.params
 
-export default Playlist
+    this.props.getPlaylistDetailsRequest(id)
+  }
+
+  renderDetails = () => {
+    const playlist = this.props.playlistDetails.data
+
+    return(
+      <Container>
+        <Header>
+          <img src={playlist.thumbnail} alt={playlist.title} />
+          <div>
+            <span>PLAYLIST</span>
+            <h1>{playlist.title}</h1>
+            { !!playlist.songs && <p>{playlist.songs.length} musics</p>}
+
+            <button>PLAY</button>
+          </div>
+        </Header>
+
+        <SongList cellPadding={0} cellSpacing={0}>
+          <thead>
+            <th />
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>
+              <img src={ClockIcon} alt='duration' />
+            </th>
+          </thead>
+
+          <tbody>
+            { !playlist.songs ? (
+              <tr>
+                <td colSpan={5}>No musics availables</td>
+              </tr>
+            ) : (
+              playlist.songs.map(song => (
+                <tr key={song.id}>
+                  <td><img src={PlusIcon} alt='add' /></td>
+                  <td>{song.title}</td>
+                  <td>{song.author}</td>
+                  <td>{song.album}</td>
+                  <td>3:26</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </SongList>
+      </Container>
+    )
+  }
+
+  render() {
+    const { playlistDetails } = this.props
+
+    return playlistDetails.loading ? (
+      <Container loading>
+        <Loading />
+      </Container>
+    ): (
+      this.renderDetails()
+    )
+  }
+}
+
+const mapStateToProps = state => ({
+  playlistDetails: state.playlistDetails
+})
+
+export default connect(mapStateToProps, PlaylistDetailsActions)(Playlist)
