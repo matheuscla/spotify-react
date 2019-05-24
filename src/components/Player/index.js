@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import Slider from 'rc-slider'
 import Sound from 'react-sound'
 import { connect } from 'react-redux'
@@ -32,11 +32,16 @@ const Player = ({ player }) => (
       />
     )}
     <Current>
-      <img src='https://blog.spoongraphics.co.uk/wp-content/uploads/2017/01/thumbnail-2.jpg' alt="" />
-      <div>
-        <span>Times like this</span>
-        <small>Foo Fighters</small>
-      </div>
+      { !!player.currentSong && (
+        <Fragment>
+          <img src={player.currentSong.thumbnail} alt={player.currentSong.title} />
+          <div>
+            <span>{player.currentSong.title}</span>
+            <small>{player.currentSong.author}</small>
+          </div>
+        </Fragment>
+      )}
+
     </Current>
 
     <Progress>
@@ -86,7 +91,10 @@ const Player = ({ player }) => (
 Player.propTypes = ({
   player: PropTypes.shape({
     currentSong: PropTypes.shape({
-      file: PropTypes.string
+      file: PropTypes.string,
+      thumbnail: PropTypes.string,
+      title: PropTypes.string,
+      author: PropTypes.string,
     }),
     status: PropTypes.string
   }).isRequired
