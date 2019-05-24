@@ -1,45 +1,54 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
+import { Creators as PlaylistActions } from '../../store/ducks/playlists'
 
 import { Container, List, Playlist, Title } from './styles'
 
-const Browse = () => (
-  <Container>
-    <Title>Browse</Title>
+class Browse extends Component {
+  static propTypes = {
+    getPlaylistRequest: PropTypes.func.isRequired,
+    playlists: PropTypes.shape({
+      data: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+        description: PropTypes.string,
+        thumbnail: PropTypes.string,
+      }))
+    }).isRequired
+  }
 
-    <List>
-      <Playlist to='/playlists/1'>
-        <img
-          src='https://blog.spoongraphics.co.uk/wp-content/uploads/2017/01/thumbnail-2.jpg'
-        />
-        <strong>Rock</strong>
-        <p>Relax while you program listening the best of rock!</p>
-      </Playlist>
+  componentDidMount() {
+    this.props.getPlaylistRequest()
+  }
+  render() {
+    const { playlists } = this.props
 
-      <Playlist to='/playlists/1'>
-        <img
-          src='https://blog.spoongraphics.co.uk/wp-content/uploads/2017/01/thumbnail-2.jpg'
-        />
-        <strong>Rock</strong>
-        <p>Relax while you program listening the best of rock!</p>
-      </Playlist>
+    return(
+      <Container>
+        <Title>Browse</Title>
 
-      <Playlist to='/playlists/1'>
-        <img
-          src='https://blog.spoongraphics.co.uk/wp-content/uploads/2017/01/thumbnail-2.jpg'
-        />
-      <strong>Rock</strong>
-      <p>Relax while you program listening the best of rock!</p>
-      </Playlist>
+        <List>
+          {playlists.data.map(playlist => (
+            <Playlist to={`/playlist/${playlist.id}`} key={playlist.id}>
+              <img
+                src={playlist.thumbnail}
+                alt={playlist.title}
+              />
+              <strong>{playlist.title}</strong>
+              <p>{playlist.description}</p>
+            </Playlist>
+          ))}
 
-      <Playlist to='/playlists/1'>
-        <img
-          src='https://blog.spoongraphics.co.uk/wp-content/uploads/2017/01/thumbnail-2.jpg'
-        />
-      <strong>Rock</strong>
-      <p>Relax while you program listening the best of rock!</p>
-      </Playlist>
-    </List>
-  </Container>
-)
+        </List>
+      </Container>
+    )
+  }
+}
 
-export default Browse
+const mapStateToProps = state => ({
+  playlists: state.playlists
+})
+
+export default connect(mapStateToProps, PlaylistActions)(Browse)

@@ -1,13 +1,25 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Creators as PlaylistActions } from '../../store/ducks/playlists'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+
+import { Creators as PlaylistActions } from '../../store/ducks/playlists'
 
 import { Container, Nav, NewPlaylist } from './styles'
 
 import addPlaylistIcon from '../../assets/images/add_playlist.svg'
 
 class SideBar extends Component {
+  static propTypes = {
+    getPlaylistRequest: PropTypes.func.isRequired,
+    playlists: PropTypes.shape({
+      data: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string
+      }))
+    }).isRequired
+  }
+
   componentDidMount() {
     this.props.getPlaylistRequest()
   }
@@ -20,7 +32,7 @@ class SideBar extends Component {
         <div>
           <Nav>
             <li>
-              <a href=''>Browse</a>
+              <Link to='/'>Browse</Link>
             </li>
             <li>
               <a href=''>Radio</a>
