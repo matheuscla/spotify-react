@@ -107,7 +107,7 @@ const Player = ({
     <Volume>
       <img src={VolumeIcon} alt='volume' />
       <Slider
-        railStyles={{ background: '#404040', borderRadius: 10 }}
+        railStyle={{ background: '#404040', borderRadius: 10 }}
         trackStyle={{ background: '#fff' }}
         handleStyle={{ display: 'none' }}
         value={player.volume}
@@ -126,20 +126,20 @@ Player.propTypes = ({
       author: PropTypes.string,
     }),
     status: PropTypes.string,
-    volume: PropTypes.string,
+    volume: PropTypes.number,
   }).isRequired,
   play: PropTypes.func.isRequired,
   pause: PropTypes.func.isRequired,
   next: PropTypes.func.isRequired,
   prev: PropTypes.func.isRequired,
   playing: PropTypes.func.isRequired,
-  position: PropTypes.string.isRequired,
-  duration: PropTypes.string.isRequired,
+  position: PropTypes.string,
+  duration: PropTypes.string,
   setPosition: PropTypes.func.isRequired,
   handlePosition: PropTypes.func.isRequired,
   setVolume: PropTypes.func.isRequired,
-  positionShown: PropTypes.string.isRequired,
-  progress: PropTypes.string.isRequired,
+  positionShown: PropTypes.string,
+  progress: PropTypes.number.isRequired,
 })
 
 const msToTime = (duration) => {

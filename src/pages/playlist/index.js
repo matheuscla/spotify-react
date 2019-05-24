@@ -16,7 +16,7 @@ class Playlist extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
-        id: PropTypes.number
+        id: PropTypes.string
       })
     }).isRequired,
     getPlaylistDetailsRequest: PropTypes.func.isRequired,
@@ -37,7 +37,7 @@ class Playlist extends Component {
     loadSong: PropTypes.func.isRequired,
     currentSong: PropTypes.shape({
       id: PropTypes.number
-    }).isRequired
+    })
   }
 
   state = {

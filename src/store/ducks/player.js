@@ -62,7 +62,7 @@ export default function player(state = INITIAL_STATE, action) {
     case Types.SET_POSITION:
       return { ...state, position: state.duration * action.payload.percent, positionShown: null }
     case Types.SET_VOLUME:
-      return { ...state, ...action.payload.volume }
+      return { ...state, volume: action.payload.volume }
     default:
       return state
   }
