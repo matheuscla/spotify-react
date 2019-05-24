@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Creators as PlaylistActions } from '../../store/ducks/playlists'
+import { Link } from 'react-router-dom'
 
 import { Container, Nav, NewPlaylist } from './styles'
 
 import addPlaylistIcon from '../../assets/images/add_playlist.svg'
 
 class SideBar extends Component {
+  componentDidMount() {
+    this.props.getPlaylistRequest()
+  }
+
   render() {
+    const { playlists } = this.props
+
     return(
       <Container>
         <div>
@@ -57,9 +64,12 @@ class SideBar extends Component {
             <li>
               <span>PLAYLISTS</span>
             </li>
-            <li>
-              <a href=''>Best of Rock</a>
-            </li>
+            { playlists.data.map(playlist => (
+              <li key={playlist.id}>
+                <Link to={`/playlists/${playlist.id}`}>{playlist.title}</Link>
+              </li>
+            ))}
+
           </Nav>
         </div>
         <NewPlaylist>
@@ -72,4 +82,8 @@ class SideBar extends Component {
   }
 }
 
-export default connect(null, PlaylistActions)(SideBar)
+const mapStateToProps = state => ({
+  playlists: state.playlists
+})
+
+export default connect(mapStateToProps, PlaylistActions)(SideBar)
