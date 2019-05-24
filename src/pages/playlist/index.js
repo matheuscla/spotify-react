@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Loading from '../../components/Loading'
 
 import { Creators as PlaylistDetailsActions } from '../../store/ducks/playlistDetails'
+import { Creators as PlayerActions } from '../../store/ducks/player'
 
 import { Container, Header, SongList } from './styles'
 
@@ -12,7 +13,7 @@ import ClockIcon from '../../assets/images/clock.svg'
 import PlusIcon from '../../assets/images/plus.svg'
 
 class Playlist extends Component {
-  
+
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -33,7 +34,8 @@ class Playlist extends Component {
         }))
       }),
       loading: PropTypes.bool
-    }).isRequired
+    }).isRequired,
+    loadSong: PropTypes.func.isRequired
   }
 
   componentDidMount() {
@@ -86,7 +88,7 @@ class Playlist extends Component {
               </tr>
             ) : (
               playlist.songs.map(song => (
-                <tr key={song.id}>
+                <tr key={song.id} onDoubleClick={() => this.props.loadSong(song)}>
                   <td><img src={PlusIcon} alt='add' /></td>
                   <td>{song.title}</td>
                   <td>{song.author}</td>
@@ -118,4 +120,4 @@ const mapStateToProps = state => ({
   playlistDetails: state.playlistDetails
 })
 
-export default connect(mapStateToProps, PlaylistDetailsActions)(Playlist)
+export default connect(mapStateToProps, { ...PlaylistDetailsActions, ...PlayerActions })(Playlist)
