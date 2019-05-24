@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
+import Loading from '../../components/Loading'
+
 import { Creators as PlaylistActions } from '../../store/ducks/playlists'
 
 import { Container, List, Playlist, Title } from './styles'
@@ -15,7 +17,8 @@ class Browse extends Component {
         title: PropTypes.string,
         description: PropTypes.string,
         thumbnail: PropTypes.string,
-      }))
+      })),
+      loading: PropTypes.bool
     }).isRequired
   }
 
@@ -27,7 +30,7 @@ class Browse extends Component {
 
     return(
       <Container>
-        <Title>Browse</Title>
+        <Title>Browse { playlists.loading && <Loading /> }</Title>
 
         <List>
           {playlists.data.map(playlist => (
